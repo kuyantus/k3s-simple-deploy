@@ -1,5 +1,8 @@
 # What is it?
 
+[![GitHub Super-Linter](https://github.com/kuyantus/k3s-simple-deploy/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
+
+
 This repo contains code, which deploy k3s cluster (1 master and 2 worker nodes, but you can only deploy master node) and after that will deploy simple php application from kubernetes tutorials: <https://kubernetes.io/docs/tutorials/stateless-application/guestbook/>.
 
 Given playbooks and roles will install all needed stuff to be able to run k3s cluster and php application, but we need some prerequisites before deploy.
