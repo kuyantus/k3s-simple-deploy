@@ -1,0 +1,19 @@
+---
+
+- name: Install k3s-master
+  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION={{ k3s_version }} sh -
+  when: inventory_hostname in groups['k3s_master']
+
+- name: Register token
+  command: 'cat /var/lib/rancher/k3s/server/node-token'
+  register: node_token
+  when: inventory_hostname in groups['k3s_master']
+
+- name: Add K3S token variable
+  add_host:
+    name: 'K3S_TOKEN'
+    token: '{{ node_token.stdout }}'
+
+- name: Install k3s-worker
+  shell: curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION={{ k3s_version }} K3S_URL=https://{{ k3s_master }}:6443 K3S_TOKEN={{ hostvars['K3S_TOKEN']['token'] }} sh -
+  when: inventory_hostname in groups['k3s_worker']

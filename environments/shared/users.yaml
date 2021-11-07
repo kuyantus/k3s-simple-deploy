@@ -1,0 +1,15 @@
+---
+
+groups_to_create:
+  - name: ssh_access
+  - name: sudo_full
+
+users:
+  - username: deployer
+    password: ""
+    shell: /bin/bash
+    createhome: true
+    home: /home/deployer
+    groups: ["sudo_full", "ssh_access"]
+    ssh_key:
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKmtOGcsi8UwfZI6Ltzatb5hwVw3m3eR2rTxApX/O6YH deployer@app"

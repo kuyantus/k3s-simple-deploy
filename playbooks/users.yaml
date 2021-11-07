@@ -1,0 +1,19 @@
+---
+
+- hosts: k3s_cluster
+  become: yes
+
+  pre_tasks:
+    - name: import shared users settings
+      include_vars: "{{ inventory_dir }}/../../environments/shared/users.yaml"
+
+    - name: Naive assertion for users (fail if not defined)
+      assert:
+        that:
+          - users is defined
+          - users != []
+        fail_msg: "you must define users list"
+
+  roles:
+    - role: ansible.users
+    - role: weareinteractive.sudo

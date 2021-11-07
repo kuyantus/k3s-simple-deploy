@@ -1,0 +1,24 @@
+### Ansible ###
+.gathering-cache/
+.vault/
+*.retry
+collections/
+files/*.tgz
+vault.key
+vendor/roles/
+
+# Environments
+.env
+.venv
+env.bak/
+env/
+ENV/
+venv.bak/
+venv/
+
+# Other
+*.code-workspace
+*.log
+*.orig
+id_rsa*
+tmp/

@@ -1,0 +1,24 @@
+serverBlock: |-
+  server {
+    listen 8080;
+    server_name nginx.local;
+    location / {
+        proxy_set_header X-Real-IP  $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $host;
+        proxy_pass http://frontend:80;
+    }
+  }
+
+service:
+  type: NodePort
+  port: 8080
+  httpsPort: 443
+  nodePorts:
+    http: ""
+    https: ""
+  annotations: {}
+  externalTrafficPolicy: Cluster
+
+ingress:
+  enabled: true

@@ -1,0 +1,7 @@
+---
+
+- name: Install Docker
+  hosts: k3s_cluster
+  become: yes
+  roles:
+    - geerlingguy.docker

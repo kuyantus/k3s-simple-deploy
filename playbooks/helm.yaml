@@ -1,0 +1,7 @@
+---
+
+- name: Install Helm
+  hosts: k3s_master
+  become: yes
+  roles:
+    - geerlingguy.helm

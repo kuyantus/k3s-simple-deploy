@@ -1,0 +1,14 @@
+---
+
+- name: Check deployment availability
+  hosts: localhost
+
+  tasks:
+    - name: Check that you can connect (GET) to a page and it returns a status 200
+      uri:
+        url: http://{{ nginx_host }}
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 120
+      delay: 1

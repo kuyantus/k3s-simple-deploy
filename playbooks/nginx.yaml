@@ -1,0 +1,10 @@
+---
+
+- name: Install Helm Chart
+  hosts: k3s_master
+  become: yes
+  roles:
+    - helm.chart.nginx
+
+  environment:
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml

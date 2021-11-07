@@ -1,0 +1,8 @@
+---
+
+sudo_users:
+  - name: "%sudo_full"
+    nopasswd: yes
+
+k3s_master: 192.168.2.100
+k3s_version: v1.21.5+k3s2 # choose from https://github.com/k3s-io/k3s/tags

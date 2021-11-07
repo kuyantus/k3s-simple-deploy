@@ -1,0 +1,167 @@
+---
+
+- name: Create a redis-leader deployment
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: redis-leader
+        namespace: default
+      spec:
+        selector:
+          matchLabels:
+            app: redis
+            role: leader
+            tier: backend
+        replicas: 1
+        template:
+          metadata:
+            labels:
+              app: redis
+              role: leader
+              tier: backend
+          spec:
+            containers:
+            - name: leader
+              image: "docker.io/redis:6.0.5"
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 100Mi
+              ports:
+              - containerPort: 6379
+
+- name: Create a redis-leader service
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: redis-leader
+        namespace: default
+        labels:
+          app: redis
+          tier: backend
+          role: leader
+      spec:
+        ports:
+        - port: 6379
+          targetPort: 6379
+        selector:
+          app: redis
+          tier: backend
+          role: leader
+
+- name: Create a redis-follower deployment
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: redis-follower
+        namespace: default
+      spec:
+        selector:
+          matchLabels:
+            app: redis
+            role: follower
+            tier: backend
+        replicas: 1
+        template:
+          metadata:
+            labels:
+              app: redis
+              role: follower
+              tier: backend
+          spec:
+            containers:
+            - name: follower
+              image: gcr.io/google_samples/gb-redis-follower:v2
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 100Mi
+              env:
+              - name: GET_HOSTS_FROM
+                value: dns
+              ports:
+              - containerPort: 6379
+
+- name: Create a redis-follower service
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: redis-follower
+        namespace: default
+        labels:
+          app: redis
+          tier: backend
+          role: follower
+      spec:
+        ports:
+        - port: 6379
+        selector:
+          app: redis
+          tier: backend
+          role: follower
+
+- name: Create a frontend deployment
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: frontend
+        namespace: default
+      spec:
+        selector:
+          matchLabels:
+            app: guestbook
+            tier: frontend
+        replicas: 1
+        template:
+          metadata:
+            labels:
+              app: guestbook
+              tier: frontend
+          spec:
+            containers:
+            - name: php-redis
+              image: gcr.io/google_samples/gb-frontend:v5
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 100Mi
+              env:
+              - name: GET_HOSTS_FROM
+                value: "dns"
+              ports:
+              - containerPort: 80
+
+- name: Create a frontend service
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: frontend
+        namespace: default
+        labels:
+          app: guestbook
+          tier: frontend
+      spec:
+        type: NodePort
+        ports:
+        - port: 80
+        selector:
+          app: guestbook
+          tier: frontend

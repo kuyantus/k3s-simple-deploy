@@ -1,0 +1,10 @@
+---
+
+- name: Deploy app
+  hosts: k3s_master
+  become: yes
+  roles:
+    - deploy.k3s.app
+
+  environment:
+      KUBECONFIG: /etc/rancher/k3s/k3s.yaml
